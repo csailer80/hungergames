@@ -56,12 +56,12 @@ with_db(lambda d: d.execute('''
   speed DOUBLE,
   PRIMARY KEY (id));
 '''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('csa', 'Christian Sailer', 'img/skier1.png', 1, 12.6)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('dr', 'David Rudi', 'img/skier2.png', 2, 11.9)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('db', 'Dominik Bucher', 'img/skier3.png', 3, 11.0)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('dc', 'Didier Cuche', 'img/skier4.png', 4, 13.0)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('at', 'Alberto Tomba', 'img/skier5.png', 5, 9.9)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('hm', 'Hermann Maier', 'img/skier6.png', 6, 8.7)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('1', 'Christian Sailer', 'img/skier1.png', 1, 12.6)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('2', 'David Rudi', 'img/skier2.png', 2, 11.9)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('3', 'Dominik Bucher', 'img/skier3.png', 3, 11.0)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('4', 'Didier Cuche', 'img/skier4.png', 4, 13.0)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('5', 'Alberto Tomba', 'img/skier5.png', 5, 9.9)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('6', 'Hermann Maier', 'img/skier6.png', 6, 8.7)'''))
 
 # Serving frontend.
 @app.route('/')
@@ -100,7 +100,8 @@ def respond_challenge(challenge_id, command):
         with_db(lambda d: d.execute('''DELETE FROM challenges WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
     elif command == 'fail':
-        with_db(lambda d: d.execute('''UPDATE challenges SET status='FAIL' WHERE id=%s''', (challenge_id,)))
+        with_db(lambda d: d.execute('''DELETE FROM challenges WHERE id=%s''', (challenge_id,)))
+        # with_db(lambda d: d.execute('''UPDATE challenges SET status='FAIL' WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
     elif command == 'success':
         with_db(lambda d: d.execute('''UPDATE challenges SET status='SUCCESS' WHERE id=%s''', (challenge_id,)))
@@ -113,7 +114,7 @@ def respond_challenge(challenge_id, command):
 def web_poll(participant_id):
     try:
         def get_challenge(cur):
-            cur.execute('SELECT * FROM challenges WHERE participant=%s', (participant_id,))
+            cur.execute('SELECT * FROM challenges WHERE participant=%s ORDER BY status', (participant_id,))
             res = cur.fetchall()
             els = [{'id': el[0],
                     'participant': el[1],
@@ -144,7 +145,7 @@ def new_challenge():
 @app.route('/pollAllParticipants')
 def participants():
         def get_challenge(cur):
-            cur.execute('SELECT * FROM participants')
+            cur.execute('SELECT * FROM participants ORDER BY rank')
             res = cur.fetchall()
             els = [{'id': el[0],
                     'name': el[1],
