@@ -6,8 +6,16 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>FeatureLayer</title>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/3.21/esri/css/esri.css">
-    <script src="https://js.arcgis.com/3.21/"></script>
+    <!-- <link rel="stylesheet" href="https://js.arcgis.com/3.21/esri/css/esri.css">
+    <script src="https://js.arcgis.com/3.21/"></script> -->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+        crossorigin=""></script>
+
+    <script src="https://unpkg.com/esri-leaflet@2.1.1/dist/esri-leaflet.js" integrity="sha512-ECQqaYZke9cSdqlFG08zSkudgrdF6I1d8ViSa7I3VIszJyVqw4ng1G8sehEXlumdMnFYfzY0tMgdQa4WCs9IUw=="
+        crossorigin=""></script>
 
     <style>
         html,
@@ -19,44 +27,109 @@
             width: 100%;
         }
     </style>
-
-    <script>
-        require([
-            "esri/map",
-            "esri/layers/FeatureLayer",
-            "dojo/domReady!"
-        ],
-            function (
-                Map,
-                FeatureLayer
-            ) {
-                var map = new Map("map", {
-                    basemap: "hybrid",
-                    center: [9.768719, 46.43266],
-                    zoom: 12
-                });
-
-                var objectid = 1;
-                var featureLayer = new FeatureLayer("https://services1.arcgis.com/i9MtZ1vtgD3gTnyL/arcgis/rest/services/Refnr144269/FeatureServer/0", {
-                    mode: 1,
-                    outFields: ["*"],
-                    orderByFields: ['CreationDate']
-                });
-
-                function incrementSeconds() {
-                    seconds += 1;
-                    featureLayer.setDefinitionExpression("1=1 LIMIT 1 OFFSET " + objectid);
-                    map.addLayer(featureLayer);
-                    objectid++;
-                }
-
-                var seconds = setInterval(incrementSeconds, 1000);
-            });
-    </script>
 </head>
 
 <body>
     <div id="map"></div>
+
+    <script>
+        var map = L.map("map").setView([46.43266, 9.768719], 15);
+        var mapElements = [];
+        L.esri.basemapLayer("Imagery").addTo(map);
+
+        var trackpoints = [];
+        var latlngs = [];
+        var pointList = [];
+        var offset = 0;
+        var seconds = 0;
+
+        function incrementSeconds() {
+            for (el of mapElements) {
+                map.removeLayer(el);
+            }
+            mapElements = [];
+
+            function drawOne(time, color) {
+                var diffLat = latlngs[time + 1]["lat"] - latlngs[time]["lat"];
+                var diffLng = latlngs[time + 1]["lon"] - latlngs[time]["lon"];
+
+                var center = [latlngs[time]["lat"] + diffLat / 2, latlngs[time]["lon"] + diffLng / 2];
+                var angle = 360 - (Math.atan2(diffLat, diffLng) * 57.295779513082);
+
+                var arrowM = new L.marker(center, {
+                    icon: new L.divIcon({
+                        className: "arrowIcon",
+                        iconSize: new L.Point(30, 30),
+                        iconAnchor: new L.Point(15, 15),
+                        html: "<div style = 'font-size: 20px; -webkit-transform: rotate(" + angle + "deg); color:" + color + "'>&#10151;</div>"
+                    })
+                }).addTo(map);
+
+                mapElements.push(arrowM);
+            }
+            drawOne(seconds, '#0074D9');
+            if (seconds > 20) {
+                drawOne(seconds - 19, '#2ECC40');
+            }
+            if (seconds > 30) {
+                drawOne(seconds - 28, '#FF4136');
+            }
+            if (seconds > 45) {
+                drawOne(seconds - 41, '#B10DC9');
+            }
+            if (seconds > 75) {
+                drawOne(seconds - 74, '#FFDC00');
+            }
+
+
+            if (seconds % 50 == 0) {
+                var diffLat = latlngs[seconds + 1]["lat"] - latlngs[seconds]["lat"];
+                var diffLng = latlngs[seconds + 1]["lon"] - latlngs[seconds]["lon"];
+
+                var center = [latlngs[seconds]["lat"] + diffLat / 2, latlngs[seconds]["lon"] + diffLng / 2];
+                map.panTo(center);
+            }
+
+            seconds++;
+            if (seconds > latlngs.length) {
+                seconds = 0;
+            }
+            setTimeout(incrementSeconds, 250);
+        }
+
+        function getResults(offset) {
+            console.log(offset);
+
+            var query = new L.esri.query({
+                url: 'https://services1.arcgis.com/i9MtZ1vtgD3gTnyL/arcgis/rest/services/Refnr144269/FeatureServer/0'
+            });
+            query.where('1=1').orderBy('time').offset(offset).limit(500).run(function (error, results) {
+                if (!error && results.features.length > 0) {
+                    for (el of results.features) {
+                        var mapEl = L.geoJson(el);
+                        trackpoints.push(mapEl);
+                        latlngs.push({
+                            'lat': el['properties']['lat'],
+                            'lon': el['properties']['lon']
+                        });
+                        pointList.push(new L.LatLng(el['properties']['lat'], el['properties']['lon']));
+                    }
+                    getResults(offset + 500);
+                } else {
+                    console.log(error);
+                    setTimeout(incrementSeconds, 50);
+                    var track = new L.Polyline(pointList, {
+                        color: 'red',
+                        weight: 3,
+                        opacity: 0.5,
+                        smoothFactor: 1
+                    });
+                    track.addTo(map);
+                }
+            });
+        }
+        getResults(0);
+    </script>
 </body>
 
 </html>
