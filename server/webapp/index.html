@@ -3,125 +3,82 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The HTML5 Herald</title>
+    <meta name="description" content="The HTML5 Herald">
+    <meta name="author" content="SitePoint">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <script src="js/jquery-3.2.1.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/bootstrap-grid.min.css">
-  <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/styles.css?v=1.0">
 </head>
 
-<body>
-  <div class="container-fluid">
+<body onload="pollParticipants()">
+<div class="container-fluid">
     <div class="row">
-      <div class="col" id="header">
-        <h1>Challenge the Skiers</h1>
-        <img src="img/skier10.png" alt="">
-      </div>
+        <div class="col" id="header">
+            <h1>Challenge the Skiers</h1>
+            <img src="img/skier10.png" alt="">
+        </div>
     </div>
+
     <div class="row equal" style="margin-bottom: 18px">
-      <div class="col">
-        <div class="card">
-          <div class="card-block">
-            <h1>Ongoing Challenges</h1>
-            <div class="sportler">
-              <div class="runner-img challenge"></div>
-              <span class="name">Challenge 1</span>
+        <div class="col" style="max-height: 550px; overflow: hidden;">
+            <div class="card">
+                <div class="card-block">
+                    <h1>Skiers</h1>
+                    <div id="participants" class="card-text">
+
+                    </div>
+                </div>
             </div>
-            
-            <button class="btn sml blue card-btn" id="newChallenge">New Challenge</button>
-          </div>
         </div>
-      </div>
-      <div class="col" style="max-height: 550px; overflow: hidden;">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-text">
-              <h1>Skiers</h1>
-              <div class="sportler">
-                <div class="runner-img"><img src="img/skier1.png"></div>
-                <span class="rank">1.</span> <span class="name">Christian Sailer</span>
-                <span class="speed">21 km/h</span>
-              </div>
-              <div class="sportler">
-                <div class="runner-img"><img src="img/skier2.png"></div>
-                <span class="rank">2.</span> <span class="name">David Rudi</span>
-                <span class="lag">-0:04</span> <span class="speed">18 km/h</span>
-              </div>
-              <div class="sportler">
-                <div class="runner-img"><img src="img/skier3.png"></div>
-                <span class="rank">3.</span> <span class="name">Dominik Bucher</span>
-                <span class="lag">-0:14</span> <span class="speed">19 km/h</span>
-              </div>
-              <div class="sportler">
-                <div class="runner-img"><img src="img/skier4.png"></div>
-                <span class="rank">4.</span> <span class="name">Didier Cuche</span>
-                <span class="lag">-0:35</span> <span class="speed">17.5 km/h</span>
-              </div>
-              <div class="sportler">
-                <div class="runner-img"><img src="img/skier5.png"></div>
-                <span class="rank">5.</span> <span class="name">Alberto Tomba</span>
-                <span class="lag">-1:04</span> <span class="speed">18 km/h</span>
-              </div>
-              <div class="sportler">
-                <div class="runner-img"><img src="img/skier6.png"></div>
-                <span class="rank">6.</span> <span class="name">Hermann Maier</span>
-                <span class="lag">-2:45</span> <span class="speed">13 km/h</span>
-              </div>
+
+        <div id="challenges" class="col">
+
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div id="selectedChallenge" class="card-block">
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="col">
+          <div class="card">
+            <div class="card-block" style="margin: 0;">
+              <a class="twitter-timeline" href="https://twitter.com/hashtag/hackzurich2017" data-widget-id="908881395392671744">#hackzurich2017 Tweets</a>
+              <script>
+                !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+              </script>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-block">
-            <div class="card-content text-center" id="challenge">
-              <div class="challenge-img"><img src="img/skier1.png"></div>
-              <span id="runner">Challenge Christian Sailer to</span>
-                <div class="challenge-option">Sprint 500m</div>
-                <div class="challenge-option">Stand still for 20 seconds</div>
-                <div class="challenge-option">Overtake next oponent</div>
-              <span style="font-size: 18px"> for CHF </span>
-              <div class="subline-input-wrapper"><input type="text" class="subline-input" value="500"></div>
-              <button class="btn sml blue card-btn" id="newChallenge">Go!</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--<div class="col">
-        <div class="card">
-          <div class="card-block" style="margin: 0;">
-            <a class="twitter-timeline" href="https://twitter.com/hashtag/hackzurich2017" data-widget-id="908881395392671744">#hackzurich2017 Tweets</a>
-            <script>
-              !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
-            </script>
-          </div>
-        </div>
-      </div>-->
+        </div>-->
     </div>
+
     <div class="row" style="flex:1;">
-      <div class="col" style="height: 180px">
-        <div class="card">
-          <div class="card-block">
-              <iframe width="100%" height="300" frameborder="0" scrolling="no" allowfullscreen src="http://arcg.is/1SH118"></iframe>
-          </div>
+        <div class="col" style="height: 180px">
+            <div class="card">
+                <div class="card-block">
+                    <iframe width="100%" height="300" frameborder="0" scrolling="no" allowfullscreen
+                            src="http://arcg.is/1SH118"></iframe>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div class="footer">
+</div>
+<div class="footer">
     More about the workshop <a href="https://datasportchallenge.com/">https://datasportchallenge.com/</a>
-  </div>
-  <script src="js/scripts.js"></script>
+</div>
+<script src="js/scripts.js"></script>
 </body>
 
 </html>
