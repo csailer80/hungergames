@@ -1,11 +1,15 @@
-html
-{ height: 100%;}
+html {
+    height: 100%;
+    width: 95%;
+    align-content: center;
+}
 
 
-body
-{ font: normal .80em 'trebuchet ms', arial, sans-serif;
+body { font: normal .80em 'trebuchet ms', arial, sans-serif;
     background: #544;
-    color: #fff;}
+    color: #fff;
+    margin: o;
+}
 
 .header {
     background-color: #F1F1F1;
@@ -15,7 +19,7 @@ body
 }
 
 .footer {
-    background-color: #e0a800;
+    background-color: #333;
     text-align: center;
     padding: 10px;
 }
@@ -41,6 +45,8 @@ body
     background-color: #ddd;
     color: black;
 }
+
+
 /* Create three equal columns that floats next to each other */
 .col {
     float: left;
@@ -51,15 +57,39 @@ body
     width: 50%;
 }
 
-p
-{ padding: 0 0 15px 0;
+table {
+    background-color: red;
+    -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+    animation-name: example;
+    animation-duration: 4s;
+}
+
+.ampel {
+    margin: 30px;
+    height: 60%;
+    border-color: #1b1e21;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    from {background-color: red;}
+    to {background-color: yellow;}
+}
+
+/* Standard syntax */
+@keyframes example {
+    from {background-color: red;}
+    to {background-color: yellow;}
+}
+
+p { padding: 0 0 15px 0;
     line-height: 1.5em;
     margin: 15px 15px 15px 15px;
 }
 
-
 h1, h2, h3, h4, h5, h6
-{ font: normal 190% 'century gothic', arial, sans-serif;
+{ font: normal 290% 'century gothic', arial, sans-serif;
     font-weight: bold;
     color: #eee;
     margin: 15px 15px 15px 15px;
@@ -110,8 +140,6 @@ ol
 
 ol li
 { margin: 0 0 11px 0;}
-
-
 
 .left
 { float: left;
