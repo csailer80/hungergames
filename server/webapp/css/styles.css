@@ -6,9 +6,55 @@ html {
 }
 
 
-body { font: normal .80em 'trebuchet ms', arial, sans-serif;
-    background: #e0a800;
-    color: #533f03;
+body { 
+    font: normal .80em 'Source Sans Pro', sans-serif;
+    background: #2f3136;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#header {
+    background-image: url("../img/Title_PH.png");
+    margin-bottom: 18px;
+}
+
+.card {
+    background-color: #36393e;
+    height: 100%;
+}
+
+.sportler {
+    margin: 12px;
+    padding: 12px;
+    border-radius: 2px;
+    background-color: #1e2124;
+}
+
+.sportler .rank {
+    opacity: 0.6;
+    margin-right: 12px;
+}
+
+.sportler .name {
+    font-size: 24px;
+}
+
+.challenge-option {
+    background-color: #1e2124;
+    margin: 12px;
+    padding: 12px;
+}
+
+.card-btn {
+    float: right;
+    margin-right: 12px;
+}
+
+.card-content {
+    margin: 12px;
+}
+
+span#runner {
+    font-size: 24px;
 }
 
 .header {
@@ -69,7 +115,6 @@ body { font: normal .80em 'trebuchet ms', arial, sans-serif;
 
 /* Button */
 .btn {
-    font-family: 'trebuchet ms';
     display: inline-block;
     text-transform: uppercase;
     border: 0;
@@ -102,16 +147,6 @@ body { font: normal .80em 'trebuchet ms', arial, sans-serif;
     line-height: 37px;
     font-weight: 600;}
 
-/* Create three equal columns that floats next to each other */
-.col {
-    float: left;
-    width: 25%;
-    margin-left: 10px;
-}
-/* Middle column */
-.col.middle {
-    width: 50%;
-}
 
 table {
     background-color: red;
@@ -145,20 +180,20 @@ p { padding: 0 0 15px 0;
 }
 
 h1, h2, h3, h4, h5, h6
-{ font: normal 290% 'century gothic', arial, sans-serif;
+{ font: normal 290% 'Source Sans Pro', arial, sans-serif;
     font-weight: bold;
     color: #eee;
     margin: 15px 15px 15px 15px;
     padding: 5px 0 5px 0;}
 
 h2
-{ font: normal 165% 'century gothic', arial, sans-serif;
+{ font: normal 165% 'Source Sans Pro', arial, sans-serif;
     font-weight: bold;
     color: #326a9d;
     padding: 15px 0 5px 0;}
 
 h3
-{ font: normal 150% 'century gothic', arial, sans-serif; font-weight: bold;}
+{ font: normal 150% 'Source Sans Pro', arial, sans-serif; font-weight: bold;}
 
 h4, h5, h6
 { margin: 0;

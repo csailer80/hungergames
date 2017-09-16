@@ -32,9 +32,9 @@ def with_db(fn):
     db.close()
     return res
 
-with_db(lambda d: d.execute('''DROP TABLE IF EXISTS hackzurich17.challenges'''))
+with_db(lambda d: d.execute('''DROP TABLE IF EXISTS challenges'''))
 with_db(lambda d: d.execute('''
-  CREATE TABLE IF NOT EXISTS hackzurich17.challenges (
+  CREATE TABLE IF NOT EXISTS challenges (
   id INT NOT NULL AUTO_INCREMENT,
   participant VARCHAR(500) NULL,
   sponsors VARCHAR(500) NULL,
@@ -58,7 +58,7 @@ def serve_file(file):
 def app_poll(participant_id):
     try:
         def get_challenge(cur):
-            cur.execute('SELECT * FROM challenges WHERE participant=%s', (participant_id,))
+            cur.execute('''SELECT * FROM challenges WHERE participant=%s AND status='INIT' ''', (participant_id,))
             el = cur.fetchall()[0]
             return {'id': el[0],
                     'participant': el[1],
@@ -71,20 +71,27 @@ def app_poll(participant_id):
     except:
         return ''
 
-@app.route('/respondChallenge/<path:challenge_id>', methods=['POST'])
+@app.route('/responseChallenge/<path:challenge_id>', methods=['POST'])
 def respond_challenge(challenge_id):
-    content = request.get_json(silent=True)
-    if content['response'] == 'ACCEPT':
+    content = request.data
+    print(content)
+    if content == b'accept':
         with_db(lambda d: d.execute('''UPDATE challenges SET status='ACCEPTED' WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
-    elif content['response'] == 'REJECT':
+    elif content == b'decline':
         with_db(lambda d: d.execute('''DELETE FROM challenges WHERE id=%s''', (challenge_id,)))
+        return 'Ok.'
+    elif content == b'fail':
+        with_db(lambda d: d.execute('''UPDATE challenges SET status='FAIL' WHERE id=%s''', (challenge_id,)))
+        return 'Ok.'
+    elif content == b'success':
+        with_db(lambda d: d.execute('''UPDATE challenges SET status='SUCCESS' WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
     else:
         return 'Ok.'
 
 # Web stuff.
-@app.route('/web_poll')
+@app.route('/webPoll')
 def web_poll():
     try:
         def get_challenge(cur):
