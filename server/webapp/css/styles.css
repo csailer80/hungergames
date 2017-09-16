@@ -55,7 +55,7 @@ span.speed {
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
-    color: #737f8d;
+    color: #313438;
     padding: 0;
     border: none;
     background-color: transparent;
@@ -76,7 +76,7 @@ span.speed {
     position: relative;
     border-radius: 3px;
     border: 1px solid rgba(0, 0, 0, .2);
-    background-color: hsla(0, 0%, 100%, .06);
+    background-color: hsla(0, 0%, 100%, 0.63);
     padding: 0 24px;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
@@ -173,7 +173,7 @@ span.speed {
 }
 
 .challenge-option {
-    background-color: #1e2124;
+    background-color: #536373;
     margin: 12px 2px;
     padding: 12px;
     cursor: pointer;
@@ -181,7 +181,7 @@ span.speed {
 }
 
 .challenge-option.selected {
-    background-color: #43494E;
+    background-color: #3a4046;
 }
 
 .card-btn {
@@ -190,7 +190,7 @@ span.speed {
     left: 12px;
     bottom: 12px;
     border-radius: 3px;
-    background-color: #7289da;
+    background-color: #1e2124;
     color: #fff;
     font-weight: 500;
 }
