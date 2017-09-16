@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     setContentView(activityOrange);
 
-                    Button acceptButton = (Button) findViewById(R.id.acceptButton);
+                    ImageButton acceptButton = (ImageButton) findViewById(R.id.acceptButton);
                     acceptButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    Button declineButton = (Button) findViewById(R.id.declineButton);
+                    ImageButton declineButton = (ImageButton) findViewById(R.id.declineButton);
                     declineButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         protected Boolean doInBackground(String... strings) {
             HttpURLConnection connection = null;
             InputStream inputStream = null;
-            JsonReader jsonReader = null;
+            InputStreamReader inputStreamReader = null;
 
             try {
                 connection = (HttpURLConnection) new URL(strings[0]).openConnection();
@@ -218,15 +221,11 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
 
-                jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-                jsonReader.beginObject();
-                while (jsonReader.hasNext()) {
-                    jsonReader.skipValue();
-                }
-                jsonReader.endObject();
+                inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                inputStreamReader.read();
 
                 connection.disconnect();
-                jsonReader.close();
+                inputStreamReader.close();
                 inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -241,11 +240,12 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             HttpURLConnection connection = null;
             InputStream inputStream = null;
+            InputStreamReader inputStreamReader = null;
             JsonReader jsonReader = null;
 
             try {
                 while (polling) {
-                    Thread.sleep(10000);
+                    Thread.sleep(4000);
 
                     for (String url : urls) {
                         // Open connection
@@ -260,7 +260,14 @@ public class MainActivity extends AppCompatActivity {
                             if (connection != null)
                                 connection.disconnect();
 
-                            Log.e("HungerGames", "Failed to retrieve data from server");
+                            Log.i("Hunger Games", "Server not responding");
+
+                            continue;
+                        } catch (FileNotFoundException e) {
+                            if (connection != null)
+                                connection.disconnect();
+
+                            Log.i("Hunger Games", "Server rebooting?");
 
                             continue;
                         }
@@ -271,7 +278,25 @@ public class MainActivity extends AppCompatActivity {
                         String incentive = "incentive";
                         String sponsor = "sponsor";
 
-                        jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+                        inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                        jsonReader = new JsonReader(inputStreamReader);
+
+                        // check if there is anything at all
+                        try {
+                            JsonToken jsonToken = jsonReader.peek();
+
+                            if (jsonToken == null) {
+                                throw new IOException("No content");
+                            }
+                        } catch (IOException e) {
+                            Log.i("Hunger Games", "No content");
+
+                            inputStreamReader.close();
+                            jsonReader.close();
+                            connection.disconnect();
+                            continue;
+                        }
+
                         jsonReader.beginObject();
                         while (jsonReader.hasNext()) {
                             String name = jsonReader.nextName();
