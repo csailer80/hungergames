@@ -13,8 +13,31 @@ body {
 }
 
 #header {
-    background-image: url("../img/Title_PH.png");
     margin-bottom: 18px;
+    background: #1B1C1F;  /* fallback for old browsers */
+    position: relative;
+    overflow: hidden;
+}
+
+#header img {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    -webkit-mask-image:-webkit-gradient(linear, left top, bottom top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))
+}
+
+span.lag {
+    color:#FF8686;
+    opacity: 0.75;
+    float: right;
+    font-size: 14px;
+}
+span.speed {
+    color:#86FF86;
+    opacity: 0.75;
+    float: right;
+    font-size: 14px;
+    padding-right: 12px;
 }
 
 .card {
@@ -22,31 +45,116 @@ body {
     height: 100%;
 }
 
+.card-block {
+    height: 100%;
+    margin-bottom: 48px;
+}
+
+.subline-input {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    color: #737f8d;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    margin-right: 16px;
+    z-index: 1;
+    line-height: 52px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.subline-input:focus {outline:0;}
+
+.subline-input-wrapper {
+    margin: 18px 0;
+    position: relative;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.2);
+    background-color: hsla(0,0%,100%,.06);
+    padding: 0 24px;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 52px;
+}
+
 .sportler {
-    margin: 12px;
+    margin: 18px 12px;
     padding: 12px;
+    padding-left: 88px;
     border-radius: 2px;
     background-color: #1e2124;
+    position: relative;
+    height: 54px;
+    line-height: 30px;
 }
 
 .sportler .rank {
     opacity: 0.6;
     margin-right: 12px;
+    font-size: 14px;    
 }
 
 .sportler .name {
     font-size: 24px;
 }
 
+.runner-img {
+    position: absolute;
+    left: 12px;
+    top: -4px;
+}
+
+.runner-img.challenge {
+    background-color: #f04747;
+    width: 64px; 
+    height: 64px;
+    border-radius: 32px;
+}
+
+.runner-img img {
+    width: 64px; 
+    height: 64px;
+    border-radius: 32px;
+}
+
+.challenge-img img {
+    width: 100px; 
+    height: 100px;
+    border-radius: 50px;
+    margin: 12px;
+}
+
 .challenge-option {
     background-color: #1e2124;
-    margin: 12px;
+    margin: 12px 2px;
     padding: 12px;
+    cursor: pointer;
+    font-size: 24px;
+}
+.challenge-option.selected {
+    background-color: #43494E;
 }
 
 .card-btn {
-    float: right;
-    margin-right: 12px;
+    width: calc(100% - 24px);
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    border-radius: 3px;
+    background-color: #7289da;
+    color: #fff;
+    font-weight: 500;
 }
 
 .card-content {
@@ -120,20 +228,10 @@ span#runner {
     border: 0;
     border-radius: 5px;
     cursor: pointer;
-    color: #666;
-    background: #fff;
     -webkit-transition: background 0.3s ease;
     -moz-transition: background 0.3s ease;
     -o-transition: background 0.3s ease;
     transition: background 0.3s ease;
-}
-.btn.blue {
-    color: #fff;
-    background: #51A9FB;
-}
-.btn.grey {
-    color: black;
-    background: lightgrey;
 }
 .btn.lrg {
     padding: 10px 30px;

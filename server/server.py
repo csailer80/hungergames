@@ -71,20 +71,19 @@ def app_poll(participant_id):
     except:
         return ''
 
-@app.route('/responseChallenge/<path:challenge_id>', methods=['POST'])
-def respond_challenge(challenge_id):
-    content = request.data
-    print(content)
-    if content == b'accept':
+@app.route('/responseChallenge/<challenge_id>/<command>')
+def respond_challenge(challenge_id, command):
+    print(command)
+    if command == 'accept':
         with_db(lambda d: d.execute('''UPDATE challenges SET status='ACCEPTED' WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
-    elif content == b'decline':
+    elif command == 'decline':
         with_db(lambda d: d.execute('''DELETE FROM challenges WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
-    elif content == b'fail':
+    elif command == 'fail':
         with_db(lambda d: d.execute('''UPDATE challenges SET status='FAIL' WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
-    elif content == b'success':
+    elif command == 'success':
         with_db(lambda d: d.execute('''UPDATE challenges SET status='SUCCESS' WHERE id=%s''', (challenge_id,)))
         return 'Ok.'
     else:
