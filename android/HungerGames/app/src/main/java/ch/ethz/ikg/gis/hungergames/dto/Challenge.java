@@ -5,14 +5,24 @@ package ch.ethz.ikg.gis.hungergames.dto;
  */
 
 public class Challenge {
+    private long id;
     private String task;
     private String incentive;
     private String sponsor;
 
-    public Challenge(String task, String incentive, String sponsor) {
+    public Challenge(long id, String task, String incentive, String sponsor) {
+        this.id = id;
         this.task = task;
         this.incentive = incentive;
         this.sponsor = sponsor;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTask() {
@@ -46,25 +56,20 @@ public class Challenge {
 
         Challenge challenge = (Challenge) o;
 
-        if (task != null ? !task.equals(challenge.task) : challenge.task != null) return false;
-        if (incentive != null ? !incentive.equals(challenge.incentive) : challenge.incentive != null)
-            return false;
-        return sponsor != null ? sponsor.equals(challenge.sponsor) : challenge.sponsor == null;
+        return id == challenge.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = task != null ? task.hashCode() : 0;
-        result = 31 * result + (incentive != null ? incentive.hashCode() : 0);
-        result = 31 * result + (sponsor != null ? sponsor.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 
     @Override
     public String toString() {
         return "Challenge{" +
-                "task='" + task + '\'' +
+                "id=" + id +
+                ", task='" + task + '\'' +
                 ", incentive='" + incentive + '\'' +
                 ", sponsor='" + sponsor + '\'' +
                 '}';

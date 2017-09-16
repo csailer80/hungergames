@@ -6,4 +6,8 @@
     <color name="colorGreen">#00FF00</color>
     <color name="colorRed">#ff0000</color>
     <color name="colorOrange">#ffa500</color>
+    <color name="colorBrand">#2f3136</color>
+    <color name="colorFont">#fb00ff</color>
+    <color name="colorFontLight">@android:color/white</color>
+    <color name="colorFontDark">#8f0091</color>
 </resources>
