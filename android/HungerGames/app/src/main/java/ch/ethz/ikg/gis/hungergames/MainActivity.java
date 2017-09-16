@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Challenge... challenges) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
 
                 onFinishChallenge();
             } catch (InterruptedException e) {
