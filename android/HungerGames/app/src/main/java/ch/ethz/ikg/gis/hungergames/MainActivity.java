@@ -21,8 +21,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.ethz.ikg.gis.hungergames.dto.Challenge;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String participantNumber = null;
     private Challenge currentChallenge = null;
-    private Set<Challenge> pendingChallenges = new HashSet<>();
+    private List<Challenge> pendingChallenges = new ArrayList<>();
     private String serverURL = "http://hungergames-vested-mayfly.scapp.io";
     private boolean polling = false;
     private boolean pendingChallenge = false;
@@ -94,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    pendingChallenges.add(challenge);
+                    if (!pendingChallenges.contains(challenge)) {
+                        pendingChallenges.add(challenge);
+                    }
 
                     TextView sponsor = (TextView) findViewById(R.id.sponsorPending);
                     TextView cash = (TextView) findViewById(R.id.cashPending);
@@ -114,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 setContentView(activityGreen);
 
-                currentChallenge = pendingChallenges.iterator().next();
-                pendingChallenges.remove(currentChallenge);
+                currentChallenge = pendingChallenges.get(0);
+                pendingChallenges.remove(0);
 
                 TextView sponsor = (TextView) findViewById(R.id.sponsor);
                 TextView cash = (TextView) findViewById(R.id.cash);
@@ -136,15 +138,15 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                currentChallenge = pendingChallenges.iterator().next();
-                pendingChallenges.remove(currentChallenge);
+                currentChallenge = pendingChallenges.get(0);
+                pendingChallenges.remove(0);
                 updateServer(currentChallenge, "decline");
 
                 pendingChallenge = false;
 
                 if (pendingChallenges.size() > 0) {
-                    Challenge nextChallenge = pendingChallenges.iterator().next();
-                    pendingChallenges.remove(nextChallenge);
+                    Challenge nextChallenge = pendingChallenges.get(0);
+                    pendingChallenges.remove(0);
                     onReceiveChallenge(nextChallenge);
                 } else {
                     setContentView(activityRed);
@@ -163,8 +165,8 @@ public class MainActivity extends AppCompatActivity {
         pendingChallenge = false;
 
         if (pendingChallenges.size() > 0) {
-            Challenge nextChallenge = pendingChallenges.iterator().next();
-            pendingChallenges.remove(nextChallenge);
+            Challenge nextChallenge = pendingChallenges.get(0);
+            pendingChallenges.remove(0);
             onReceiveChallenge(nextChallenge);
         } else {
             runOnUiThread(new Runnable() {
@@ -311,6 +313,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (sponsors.indexOf(",") > 0) {
                                     sponsor = sponsors.substring(0, sponsors.indexOf(","));
+                                } else {
+                                    sponsor = sponsors;
                                 }
                             } else {
                                 jsonReader.skipValue();
