@@ -44,6 +44,23 @@ with_db(lambda d: d.execute('''
   PRIMARY KEY (id));
 '''))
 
+with_db(lambda d: d.execute('''DROP TABLE IF EXISTS participants'''))
+with_db(lambda d: d.execute('''
+  CREATE TABLE IF NOT EXISTS participants (
+  id VARCHAR(500) NOT NULL,
+  name VARCHAR(200),
+  image VARCHAR(200),
+  rank INT,
+  speed DOUBLE,
+  PRIMARY KEY (id));
+'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('csa', 'Christian Sailer', 'img/skier1.png', 1, 12.6)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('dr', 'David Rudi', 'img/skier2.png', 2, 11.9)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('db', 'Dominik Bucher', 'img/skier3.png', 3, 11.0)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('dc', 'Didier Cuche', 'img/skier4.png', 4, 13.0)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('at', 'Alberto Tomba', 'img/skier5.png', 5, 9.9)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('hm', 'Hermann Maier', 'img/skier6.png', 6, 8.7)'''))
+
 # Serving frontend.
 @app.route('/')
 def index():
@@ -90,11 +107,11 @@ def respond_challenge(challenge_id, command):
         return 'Ok.'
 
 # Web stuff.
-@app.route('/webPoll')
-def web_poll():
+@app.route('/pollParticipantChallenges/<path:participant_id>')
+def web_poll(participant_id):
     try:
         def get_challenge(cur):
-            cur.execute('SELECT * FROM challenges')
+            cur.execute('SELECT * FROM challenges WHERE participant=%s', (participant_id,))
             res = cur.fetchall()
             els = [{'id': el[0],
                     'participant': el[1],
@@ -121,6 +138,20 @@ def new_challenge():
                   (participant, sponsors, task, incentive))
     with_db(insert)
     return 'Ok.'
+
+@app.route('/pollAllParticipants')
+def participants():
+        def get_challenge(cur):
+            cur.execute('SELECT * FROM participants')
+            res = cur.fetchall()
+            els = [{'id': el[0],
+                    'name': el[1],
+                    'image': el[2],
+                    'rank': el[3], 
+                    'speed': el[4]} for el in res]
+            return els
+        res = with_db(get_challenge)
+        return jsonify(res)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)
