@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
@@ -23,6 +24,7 @@ import ch.ethz.ikg.gis.hungergames.dto.Challenge;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String participantNumber = null;
     private Challenge currentChallenge = null;
     private List<Challenge> pendingChallenges = new ArrayList<>();
     private String serverURL = "http://hungergames-vested-mayfly.scapp.io";
@@ -39,15 +41,19 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setContentView(R.layout.activity_red);
-                polling = true;
-                pollerThread.run();
+                EditText participantNumberText = (EditText) findViewById(R.id.participantNumberContent);
+
+                if (participantNumberText.getText() != null && !"".equals(participantNumberText.getText().toString())) {
+                    participantNumber = participantNumberText.getText().toString();
+                    setContentView(R.layout.activity_red);
+                    polling = true;
+                    pollerThread.run();
+                }
             }
         });
 
         Button acceptButton = (Button) findViewById(R.id.acceptButton);
-
-        startButton.setOnClickListener(new View.OnClickListener() {
+        acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onAcceptChallenge();
@@ -55,14 +61,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button declineButton = (Button) findViewById(R.id.declineButton);
-
-        startButton.setOnClickListener(new View.OnClickListener() {
+        declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onDeclineChallenge();
             }
         });
-
     }
 
     @Override
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             JsonReader jsonReader = null;
 
             try {
-                connection = (HttpURLConnection) new URL(serverURL).openConnection();
+                connection = (HttpURLConnection) new URL(serverURL + "/pollChallenges/" + participantNumber).openConnection();
                 connection.setRequestMethod("GET");
 
                 inputStream = new BufferedInputStream(connection.getInputStream());
