@@ -2,8 +2,10 @@ import os
 import MySQLdb as mariadb
 import json
 from flask import Flask, send_from_directory, jsonify, request
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
 port = int(os.getenv('PORT', '3000'))
 
 
