@@ -13,6 +13,14 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+    crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+    crossorigin=""></script>
+
+<script src="https://unpkg.com/esri-leaflet@2.1.1/dist/esri-leaflet.js" integrity="sha512-ECQqaYZke9cSdqlFG08zSkudgrdF6I1d8ViSa7I3VIszJyVqw4ng1G8sehEXlumdMnFYfzY0tMgdQa4WCs9IUw=="
+    crossorigin=""></script>
+
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-grid.min.css">
@@ -56,9 +64,8 @@
     <div class="row" style="flex:1;">
         <div class="col" style="height: 180px">
             <div class="card">
-                <div class="card-block">
-                    <iframe width="100%" height="300" frameborder="0" scrolling="no" allowfullscreen
-                            src="http://arcg.is/1SH118"></iframe>
+                <div class="card-block" style="margin: 0; height: 285px;">
+                    <div id="map" style="width: 100%; height: 100%;"></div>
                 </div>
             </div>
         </div>
