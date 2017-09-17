@@ -125,15 +125,15 @@ span.speed {
 }
 
 .challenge-none {
-    background-color: #ff0000;
+    background-color: #B71C1C;
 }
 
 .challenge-INIT {
-    background-color: #ffa500;
+    background-color: #CC8108;
 }
 
 .challenge-ACCEPTED {
-    background-color: #00FF00;
+    background-color: #099109;
 }
 
 .selected {
@@ -149,7 +149,7 @@ span.speed {
 .runner-img {
     position: absolute;
     left: 12px;
-    top: -4px;
+    top: 4px;
 }
 
 .runner-img.challenge {
@@ -160,8 +160,8 @@ span.speed {
 }
 
 .runner-img img {
-    width: 64px;
-    height: 64px;
+    width: 46px;
+    height: 46px;
     border-radius: 32px;
 }
 

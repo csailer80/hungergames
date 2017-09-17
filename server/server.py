@@ -56,12 +56,12 @@ with_db(lambda d: d.execute('''
   speed DOUBLE,
   PRIMARY KEY (id));
 '''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('1', 'Christian Sailer', 'img/skier1.png', 1, 12.6)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('2', 'David Rudi', 'img/skier2.png', 2, 11.9)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('3', 'Dominik Bucher', 'img/skier3.png', 3, 11.0)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('4', 'Didier Cuche', 'img/skier4.png', 4, 13.0)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('5', 'Alberto Tomba', 'img/skier5.png', 5, 9.9)'''))
-with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('6', 'Hermann Maier', 'img/skier6.png', 6, 8.7)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('1', 'Dario Cologna', 'img/skier1.png', 1, 12.6)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('2', 'Curdin Perl', 'img/skier2.png', 2, 11.9)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('3', 'Jonas Baumann', 'img/skier3.png', 3, 11.0)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('4', 'Toni Livers', 'img/skier4.png', 4, 13.0)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('5', 'Laurien v.d. Graaff', 'img/skier5.png', 5, 9.9)'''))
+with_db(lambda d: d.execute('''INSERT INTO participants (id, name, image, rank, speed) VALUES ('6', 'Gianluca Cologna', 'img/skier6.png', 6, 8.7)'''))
 
 # Serving frontend.
 @app.route('/')

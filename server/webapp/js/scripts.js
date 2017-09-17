@@ -1,4 +1,18 @@
 var participantColors = [];
+var init = true;
+var challengesMap = {};
+
+function eqSet(as, bs) {
+    try {
+        if (as.size !== bs.size) return false;
+        for (var a of as) if (!bs.has(a)) return false;
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+
 function pollParticipants() {
     var participants;
 
@@ -10,50 +24,55 @@ function pollParticipants() {
             selectedParticipantId = $(".card.selected").get(0).id;
         }
 
-        // clear existing participants
-        $("#participants").empty();
-        $("#challenges").empty();
-
         // go through participants
         participants = participantsResponse;
 
         for (i = 0; i < participants.length; i++) {
             var participant = participants[i];
-
-            // Create the participant div
-            $("#participants").append(
-                "<div id=\"" + participant.id + "\" class=\"sportler\" onclick=\"participantClicked('" + participant.id + "')\">" +
-                "<div class=\"runner-img\"><img src=\"" + participant.image + "\"></div>" +
-                "<span class=\"rank\">" + participant.rank + "</span> " +
-                "<span class=\"name\">" + participant.name + "</span>" +
-                "<span class=\"speed\">" + participant.speed + " km/h</span>" +
-                "</div>");
+            if ($('#' + participant.id) && $('#' + participant.id).length > 0) {
+                $('#' + participant.id).css('background-color', participantColors[i]);
+            } else {
+                // Create the participant div
+                $("#participants").append(
+                    "<div id=\"" + participant.id + "\" class=\"sportler\" onclick=\"participantClicked('" + participant.id + "')\">" +
+                    "<div class=\"runner-img\"><img src=\"" + participant.image + "\"></div>" +
+                    "<span class=\"rank\">" + participant.rank + "</span> " +
+                    "<span class=\"name\">" + participant.name + "</span>" +
+                    "<span class=\"speed\">" + participant.speed + " km/h</span>" +
+                    "</div>");
+            }
 
             // Create the challenge divs
             var participantSelected = "";
 
             if (selectedParticipantId) {
                 if (participant.id + "Challenges" == selectedParticipantId) {
-                    participantSelected = "selected"
+                    if ($('#' + participant.id + 'Challenges').get(0).classList.contains("not-selected")) {
+                        $('#' + participant.id + 'Challenges').get(0).classList.toggle('selected');
+                        $('#' + participant.id + 'Challenges').get(0).classList.toggle('not-selected');
+                    }
                 } else {
-                    participantSelected = "not-selected"
+                    if ($('#' + participant.id + 'Challenges').get(0).classList.contains("selected")) {
+                        $('#' + participant.id + 'Challenges').get(0).classList.toggle('selected');
+                        $('#' + participant.id + 'Challenges').get(0).classList.toggle('not-selected');
+                    }
                 }
-            } else {
+            } else if (init) {
                 if (i == 0) {
                     participantSelected = "selected"
                 } else {
                     participantSelected = "not-selected"
                 }
-            }
 
-            $("#challenges").append(
-                "<div id=\"" + participant.id + "Challenges\" class=\"card " + participantSelected + "\">" +
-                "<h1>Ongoing Challenges of " + participant.name + "</h1>" +
-                "<div id=\"" + participant.id + "ChallengesBlock\" class=\"card-block \">" +
-                "</div>" +
-                "<button class=\"btn sml blue card-btn\" id=\"newChallengeButton\" onclick=\"newChallenge('" + JSON.stringify(participant).replace(/\"/g, "$") + "')\">New Challenge</button>" +
-                "</div>"
-            );
+                $("#challenges").append(
+                    "<div id=\"" + participant.id + "Challenges\" class=\"card " + participantSelected + "\">" +
+                    "<h1>Challenges of " + participant.name + "</h1>" +
+                    "<div id=\"" + participant.id + "ChallengesBlock\" class=\"card-block \">" +
+                    "</div>" +
+                    "<button class=\"btn sml blue card-btn\" id=\"newChallengeButton\" onclick=\"newChallenge('" + JSON.stringify(participant).replace(/\"/g, "$") + "')\">New Challenge</button>" +
+                    "</div>"
+                );
+            }
         }
     }).done(function () {
         for (i = 0; i < participants.length; i++) {
@@ -61,34 +80,39 @@ function pollParticipants() {
 
             (function (participant, i) {
                 $.getJSON('http://hungergames-vested-mayfly.scapp.io/pollParticipantChallenges/' + participant.id, function (challenges) {
-                    if (challenges.length > 0) {
-                        for (j = 0; j < challenges.length; j++) {
-                            var challenge = challenges[j];
+                    if (!eqSet(new Set(challenges.map(function (a) { return a['id'] + a['status']; })), challengesMap[participant.id])) {
+                        $("#" + participant.id + "ChallengesBlock").empty();
+                        if (challenges.length > 0) {
+                            for (j = 0; j < challenges.length; j++) {
+                                var challenge = challenges[j];
 
-                            // color code the participant based on the first challenge
-                            if (j == 0) {
-                                $("#" + participant.id).get(0).classList.add("challenge-" + challenge.status);
-                                if (challenge.status === 'INIT') {
-                                  participantColors[i] = '#ffa500';
-                                } else {
-                                  participantColors[i] = '#00ff00';
+                                // color code the participant based on the first challenge
+                                if (j == 0) {
+                                    $("#" + participant.id).get(0).classList.add("challenge-" + challenge.status);
+                                    if (challenge.status === 'INIT') {
+                                        participantColors[i] = '#CC8108';
+                                    } else {
+                                        participantColors[i] = '#099109';
+                                    }
                                 }
-                            }
 
-                            $("#" + participant.id + "ChallengesBlock").append(
-                                "<div class=\"challenge challenge-" + challenge.status + "\">" +
-                                "<span class=\"name\">" + challenge.task + "</span>" +
-                                "</div>"
-                            );
+                                $("#" + participant.id + "ChallengesBlock").append(
+                                    "<div class=\"challenge challenge-" + challenge.status + "\">" +
+                                    "<span class=\"name\">" + challenge.task + "</span>" +
+                                    "</div>"
+                                );
+                            }
+                        } else {
+                            // color code the participant to none
+                            $("#" + participant.id).get(0).classList.add("challenge-none");
+                            participantColors[i] = '#B71C1C';
                         }
-                    } else {
-                        // color code the participant to none
-                        $("#" + participant.id).get(0).classList.add("challenge-none");
-                        participantColors[i] = '#ff0000';
+                        challengesMap[participant.id] = new Set(challenges.map(function (a) { return a['id'] + a['status']; }));
                     }
                 });
             })(participant, i);
         }
+        init = false;
     });
 
     setTimeout(pollParticipants, 1000);
@@ -189,9 +213,9 @@ function incrementSeconds() {
         var arrowM = new L.marker(center, {
             icon: new L.divIcon({
                 className: "arrowIcon",
-                iconSize: new L.Point(30, 30),
-                iconAnchor: new L.Point(15, 15),
-                html: "<div style = 'font-size: 20px; -webkit-transform: rotate(" + angle + "deg); color:" + color + "'>&#10151;</div>"
+                iconSize: new L.Point(40, 40),
+                iconAnchor: new L.Point(20, 30),
+                html: "<div style = 'font-size: 40px; -webkit-transform: rotate(" + angle + "deg); color:" + color + "'>&#10151;</div>"
             })
         }).addTo(map);
 
@@ -252,9 +276,9 @@ function getResults(offset) {
             console.log(error);
             setTimeout(incrementSeconds, 50);
             var track = new L.Polyline(pointList, {
-                color: 'red',
-                weight: 3,
-                opacity: 0.5,
+                color: '#fff',
+                weight: 8,
+                opacity: 0.7,
                 smoothFactor: 1
             });
             track.addTo(map);
